@@ -56,6 +56,14 @@ async function run() {
          const result = await jobApplicationCollection.insertOne(data)
          res.send(result)
       })
+
+      // Get a users all job application by query
+      app.get('/job-application', async (req, res) => {
+         const email = req.query.email
+         const query = { applicant_email: email }
+         const result = await jobApplicationCollection.find(query).toArray()
+         res.send(result)
+      })
    } finally {
       // Ensures that the client will close when you finish/error
       // await client.close()
