@@ -62,6 +62,21 @@ async function run() {
          const email = req.query.email
          const query = { applicant_email: email }
          const result = await jobApplicationCollection.find(query).toArray()
+
+         // Aggregate data
+         for (const application of result) {
+            const jobQuery = { _id: new ObjectId(application.job_id) }
+            const job = await jobsCollection.findOne(jobQuery)
+            if (job) {
+               application.title = job.title
+               application.company = job.company
+               application.company_logo = job.company_logo
+               application.location = job.location
+               application.category = job.category
+               application.jobType = job.jobType
+               application.salaryRange = job.salaryRange
+            }
+         }
          res.send(result)
       })
    } finally {
